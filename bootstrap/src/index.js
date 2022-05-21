@@ -1,30 +1,34 @@
-function loadMicroFrontend() {
-  const mfe = this.responseXML
-  document.head.replaceChildren(...mfe.head.childNodes)
-  document.body.replaceChildren(...mfe.body.childNodes)
-}
+import config from "./config"
+import download from "./download"
+import mountMicroFrontendInPage from "./mount"
 
-function downloadIndexHtml(url) {
-  const xhr = new XMLHttpRequest()
-  xhr.responseType = "document"
-  xhr.addEventListener("load", loadMicroFrontend)
-  xhr.open("GET", url)
-  xhr.send()
-}
+function getMicroFrontendNameFromPathname(pathname = window.location.pathname) {
+  const [ , microFrontendId ] = pathname.split("/")
+  const microFrontend = config.microFrontends.find(microFrontend => microFrontend.pathnameId === microFrontendId)
 
-function getMicroFrontend() {
-  switch (window.location.pathname) {
-    case "/hello":
-    case "/hello/":
-      downloadIndexHtml(window.location.protocol + "://" + window.location.host + "/mfe/welcome/index.html")
-      break
-    case "/play":
-    case "/play/":
-      downloadIndexHtml(window.location.protocol + "://" + window.location.host + "/mfe/music/index.html")
-      break
-    default:
-      throw "No MFE found for the current path"
+  if (!microFrontend) {
+    return
   }
+
+  return microFrontend.name
 }
 
-document.addEventListener("DOMContentLoaded", getMicroFrontend, false)
+function getMicroFrontendEntryPointUrl(microFrontendName) {
+  return `/mfe/${microFrontendName}/index.html`
+}
+
+function loadMicroFrontend() {
+  const microFrontendName = getMicroFrontendNameFromPathname()
+
+  if (!microFrontendName) {
+    // TODO: load a "default" MFE
+    throw new Error("Could not mount a micro frontend based on the current URL :(")
+  }
+
+  const microFrontendEntryPointUrl = getMicroFrontendEntryPointUrl(microFrontendName)
+
+  download(microFrontendEntryPointUrl).then(microFrontendDocument =>
+    mountMicroFrontendInPage(microFrontendName, microFrontendDocument))
+}
+
+document.addEventListener("DOMContentLoaded", loadMicroFrontend, false)
