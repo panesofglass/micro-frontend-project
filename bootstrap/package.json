@@ -1,0 +1,20 @@
+{
+  "name": "bootstrap",
+  "version": "1.0.0",
+  "source": "src/index.html",
+  "browserlist": "> 0.5%, last 2 versions, not dead",
+  "author": "Ryan Riley",
+  "license": "ISC",
+  "description": "",
+  "scripts": {
+    "dev": "parcel src/index.html",
+    "build": "parcel build src/index.html",
+    "build:watch": "parcel watch src/index.html"
+  },
+  "devDependencies": {
+    "parcel": "^2.5.0"
+  },
+  "dependencies": {
+    "micro-frontend-project": "file:.."
+  }
+}
