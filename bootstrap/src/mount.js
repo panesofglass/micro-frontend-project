@@ -1,5 +1,12 @@
 const CLASS_NAME = "micro-frontend"
 
+const EVENT_NAMES = {
+  MICRO_FRONTEND_DID_MOUNT: "did_mount",
+  MICRO_FRONTEND_WILL_MOUNT: "will_mount",
+  MICRO_FRONTEND_DID_UNMOUNT: "did_unmount",
+  MICRO_FRONTEND_WILL_UNMOUNT: "will_unmount"
+}
+
 function moveNodeToDocument(parent, document, node) {
   if (node.tagName === "SCRIPT") {
     const clonedNode = document.createElement(node.tagName)
@@ -30,6 +37,11 @@ function addOrUpdateBaseTag(microFrontendName) {
 }
 
 function mountMicroFrontendInPage(microFrontendName, microFrontendDocument) {
+  document.dispatchEvent(new CustomEvent(EVENT_NAMES.MICRO_FRONTEND_WILL_MOUNT), {
+    bubbles: true,
+    cancelable: true
+  })
+
   const microFrontendHeadNodes = microFrontendDocument.querySelectorAll("head>*")
   const microFrontendBodyNodes = microFrontendDocument.querySelectorAll("body>*")
 
@@ -40,15 +52,30 @@ function mountMicroFrontendInPage(microFrontendName, microFrontendDocument) {
   for (let bodyNode of microFrontendBodyNodes) {
     moveNodeToDocument(document.body, document, bodyNode)
   }
+
+  document.dispatchEvent(new CustomEvent(EVENT_NAMES.MICRO_FRONTEND_DID_MOUNT), {
+    bubbles: true,
+    cancelable: true
+  })
 }
 
 function unmountMicroFrontendInPage() {
+  document.dispatchEvent(new CustomEvent(EVENT_NAMES.MICRO_FRONTEND_WILL_UNMOUNT), {
+    bubbles: true,
+    cancelable: true
+  })
+
   const nodesToRemove = document.querySelectorAll(`.${CLASS_NAME}`)
   for (let node of nodesToRemove) {
     if (node.parentElement) {
       node.parentElement.removeChild(node)
     }
   }
+
+  document.dispatchEvent(new CustomEvent(EVENT_NAMES.MICRO_FRONTEND_DID_UNMOUNT), {
+    bubbles: true,
+    cancelable: true
+  })
 }
 
-export { mountMicroFrontendInPage, unmountMicroFrontendInPage }
+export { EVENT_NAMES, mountMicroFrontendInPage, unmountMicroFrontendInPage }

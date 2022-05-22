@@ -8,3 +8,7 @@ function loadMicroFrontend() {
 }
 
 document.addEventListener("DOMContentLoaded", loadMicroFrontend, false)
+
+document.addEventListener(
+  window.bootstrap.eventNames.MICRO_FRONTEND_WILL_UNMOUNT,
+  () => console.log("micro frontend will unmount"))
