@@ -1,8 +1,10 @@
+const CLASS_NAME = "micro-frontend"
+
 function moveNodeToDocument(parent, document, node) {
   if (node.tagName === "SCRIPT") {
     const clonedNode = document.createElement(node.tagName)
 
-    clonedNode.classList.add("micro-frontend")
+    clonedNode.classList.add(CLASS_NAME)
     Array.from(node.attributes).forEach(attribute => clonedNode.setAttribute(attribute.name, attribute.value))
     clonedNode.innerHTML = node.innerHTML
 
@@ -11,18 +13,23 @@ function moveNodeToDocument(parent, document, node) {
   }
 
   const adoptedNode = document.adoptNode(node)
-  adoptedNode.classList.add("micro-frontend")
+  adoptedNode.classList.add(CLASS_NAME)
   parent.appendChild(adoptedNode)
 }
 
 function addOrUpdateBaseTag(microFrontendName) {
-  const baseElements = document.getElementsByTagName("base")
-  const baseElement = baseElements.length > 0 ?  baseElements[0] : document.createElement('base')
+  const [existingBaseElement] = document.getElementsByTagName("base")
+  if (existingBaseElement) {
+    existingBaseElement.setAttribute("href", `/mfe/${microFrontendName}/`)
+    return
+  }
+
+  const baseElement = document.createElement('base')
   baseElement.setAttribute('href', `/mfe/${microFrontendName}/`)
   document.head.appendChild(baseElement)
 }
 
-export function mountMicroFrontendInPage(microFrontendName, microFrontendDocument) {
+function mountMicroFrontendInPage(microFrontendName, microFrontendDocument) {
   const microFrontendHeadNodes = microFrontendDocument.head.children
   const microFrontendBodyNodes = microFrontendDocument.body.children
 
@@ -35,11 +42,13 @@ export function mountMicroFrontendInPage(microFrontendName, microFrontendDocumen
   }
 }
 
-export function unmountMicroFrontendInPage() {
-  const nodesToRemove = document.querySelectorAll(".micro-frontend")
+function unmountMicroFrontendInPage() {
+  const nodesToRemove = document.querySelectorAll(`.${CLASS_NAME}`)
   for (let node of nodesToRemove) {
     if (node.parentElement) {
       node.parentElement.removeChild(node)
     }
   }
 }
+
+export { mountMicroFrontendInPage, unmountMicroFrontendInPage }
