@@ -1,7 +1,8 @@
 import { navigateTo } from "./router"
 import { createPublicApi } from "./publicApi"
+import { eventNames } from "./events"
 
-createPublicApi(navigateTo)
+createPublicApi({navigateTo, eventNames})
 
 function loadMicroFrontend() {
   navigateTo(window.location.pathname)

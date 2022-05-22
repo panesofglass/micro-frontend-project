@@ -1,11 +1,9 @@
-import { EVENT_NAMES } from "./mount"
-
-function createPublicApi(navigateTo) {
+function createPublicApi({ navigateTo, eventNames }) {
 	window.bootstrap = {
-    eventNames: EVENT_NAMES,
     router: {
       navigateTo,
-    }
+    },
+    eventNames
   }
 }
 

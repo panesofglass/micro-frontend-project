@@ -1,45 +1,37 @@
 <template>
-  <div class="signin">
-    <header>
-      <h1>Sign In</h1>
-    </header>
-    <form class="signin-form" action="https://buildingmfe.maxgallo.io/api/login" method="post" @submit="onSubmit">
-      <div class="form-group">
-        <label for="username">Username</label>
+  <div class="signin-page">
+    <div class="text polka-dot-bg">
+      <header>
+        <h1>Sign In</h1>
+      </header>
+      <form class="signin-form" action="https://buildingmfe.maxgallo.io/api/login" method="post" @submit.prevent="onSubmit">
         <input
           id="username"
           name="username"
           v-model="username"
           type="text"
-          class="form-control form-control-lg" />
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
+          placeholder="Username" />
         <input
           id="password"
           name="password"
           v-model="password"
           type="password"
-          class="form-control form-control-lg" />
-      </div>
-      <button type="submit" class="btn btn-dark btn-lg btn-block">Sign In</button>
-    </form>
+          placeholder="Password" />
+        <button type="submit" class="btn btn-dark btn-lg btn-block">Sign In</button>
+      </form>
+    </div>
+    <Footer />
   </div>
 </template>
 
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-</style>
-
 <script>
+import Footer from "../components/Footer.vue"
+import { goToMusicMicroFrontend } from "../bootstrap"
+
 export default {
-  name: "SignIn",
+  components: {
+    Footer
+  },
   data() {
     return {
       username: '',
@@ -47,8 +39,7 @@ export default {
     }
   },
   methods: {
-    onSubmit(e) {
-      e.preventDefault()
+    onSubmit() {
       const payload = {
         username: this.username,
         password: this.password
@@ -67,7 +58,7 @@ export default {
           this.username = ""
           this.password = ""
           window.sessionStorage.setItem("token", data.token)
-          window.bootstrap.router.navigateTo("/play")
+          goToMusicMicroFrontend()
         } else {
           window.sessionStorage.removeItem("token")
           alert("Authentication failed")
@@ -83,3 +74,22 @@ export default {
   }
 }
 </script>
+
+<style>
+.signin-page {
+  background-image: url('./vinyl2-bg.jpg');
+  background-size: cover;
+  height: 100vh;
+  width: 100%;
+  color: var(--mint-cream);
+  font-family: sans-serif;
+}
+button {
+  display: block;
+  margin-top: 5px;
+}
+
+input {
+  margin: 5px 0px;
+}
+</style>

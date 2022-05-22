@@ -1,6 +1,7 @@
 import config from "./config"
 import download from "./download"
 import { mountMicroFrontendInPage, unmountMicroFrontendInPage } from "./mount"
+import { dispatchEvent, eventNames } from "./events"
 
 function getMicroFrontendNameFromPathname(pathname = window.location.pathname) {
   const [ , microFrontendId ] = pathname.split("/")
@@ -20,10 +21,6 @@ function getMicroFrontendEntryPointUrl(microFrontendName) {
 const navigationHistory = []
 
 function navigateTo(pathname) {
-  if (navigationHistory.length > 0) {
-    unmountMicroFrontendInPage()
-  }
-
   const microFrontendName = getMicroFrontendNameFromPathname(pathname)
 
   if (!microFrontendName) {
@@ -31,14 +28,26 @@ function navigateTo(pathname) {
     throw new Error("Could not mount a micro frontend based on the current URL :(")
   }
 
+  if (navigationHistory.length > 0) {
+    const currentMicroFrontend = getMicroFrontendNameFromPathname(navigationHistory[navigationHistory.length - 1])
+    dispatchEvent(eventNames.MICRO_FRONTEND_WILL_UNMOUNT, { microFrontendName: currentMicroFrontend })
+    unmountMicroFrontendInPage()
+    dispatchEvent(eventNames.MICRO_FRONTEND_DID_UNMOUNT, { microFrontendName: currentMicroFrontend })
+  }
+
+  dispatchEvent(eventNames.MICRO_FRONTEND_WILL_MOUNT, { microFrontendName })
   navigationHistory.push(pathname)
   window.history.pushState({}, "", pathname)
 
   const microFrontendEntryPointUrl = getMicroFrontendEntryPointUrl(microFrontendName)
 
-  download(microFrontendEntryPointUrl).then(microFrontendDocument => {
-    mountMicroFrontendInPage(microFrontendName, microFrontendDocument)
-  })
+  download(microFrontendEntryPointUrl)
+    .then(microFrontendDocument => {
+      mountMicroFrontendInPage(microFrontendName, microFrontendDocument)
+    })
+    .then(() => {
+      dispatchEvent(eventNames.MICRO_FRONTEND_DID_MOUNT, { microFrontendName })
+    })
 }
 
 export { navigateTo }
