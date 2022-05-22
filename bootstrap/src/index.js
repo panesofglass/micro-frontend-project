@@ -1,11 +1,17 @@
-import { navigateTo } from "./router"
+import { checkAuthentication, navigateTo } from "./router"
 import { createPublicApi } from "./publicApi"
 import { eventNames } from "./events"
 
 createPublicApi({navigateTo, eventNames})
 
 function loadMicroFrontend() {
-  navigateTo(window.location.pathname)
+  checkAuthentication()
+    .then(isAuthenticated => {
+      const pathname = isAuthenticated ?
+        window.location.pathname === "/" ? "/play" : window.location.pathname :
+        "/hello"
+      navigateTo(pathname)
+    })
 }
 
 document.addEventListener("DOMContentLoaded", loadMicroFrontend, false)

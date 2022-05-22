@@ -26,7 +26,7 @@
 
 <script>
 import Footer from "../components/Footer.vue"
-import { goToMusicMicroFrontend } from "../bootstrap"
+import { goToMusicMicroFrontend, setToken } from "../bootstrap"
 
 export default {
   components: {
@@ -57,16 +57,14 @@ export default {
         if (status === "success") {
           this.username = ""
           this.password = ""
-          window.sessionStorage.setItem("token", data.token)
+          setToken(data.token)
           goToMusicMicroFrontend()
         } else {
-          window.sessionStorage.removeItem("token")
           alert("Authentication failed")
           console.error(res)
         }
       })
       .catch(e => {
-        window.sessionStorage.removeItem("token")
         alert("Authentication failed")
         console.error(e)
       })

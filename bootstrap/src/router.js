@@ -2,6 +2,7 @@ import config from "./config"
 import download from "./download"
 import { mountMicroFrontendInPage, unmountMicroFrontendInPage } from "./mount"
 import { dispatchEvent, eventNames } from "./events"
+import { getToken } from "./auth"
 
 function getMicroFrontendNameFromPathname(pathname = window.location.pathname) {
   const [ , microFrontendId ] = pathname.split("/")
@@ -50,4 +51,19 @@ function navigateTo(pathname) {
     })
 }
 
-export { navigateTo }
+function checkAuthentication() {
+  const token = getToken()
+  if (token) {
+    return fetch("https://buildingmfe.maxgallo.io/api/validate", {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      },
+      method: "POST"
+    })
+    .then(res => res.status === 200)
+  } else {
+    return new Promise(resolve => resolve(false))
+  }
+}
+
+export { checkAuthentication, navigateTo }
