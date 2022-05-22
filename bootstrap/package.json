@@ -13,5 +13,8 @@
   },
   "devDependencies": {
     "parcel": "^2.5.0"
+  },
+  "dependencies": {
+    "micro-frontend-project": "file:.."
   }
 }

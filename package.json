@@ -17,7 +17,7 @@
     "install:welcome": "npm install --prefix welcome",
     "install:all": "npm-run-all install:music install:welcome install:bootstrap",
     "dev:bootstrap": "npm-run-all build:music build:welcome --parallel build:bootstrap:watch web-server",
-    "dev:music": "npm run dev --prefix music",
+    "dev:music": "cd music && yarn start",
     "dev:welcome": "npm run dev --prefix welcome",
     "web-server": "node server.js",
     "start": "node server.js"

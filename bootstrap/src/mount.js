@@ -4,8 +4,8 @@ function moveNodeToDocument(parent, document, node) {
   if (node.tagName === "SCRIPT") {
     const clonedNode = document.createElement(node.tagName)
 
-    clonedNode.classList.add(CLASS_NAME)
     Array.from(node.attributes).forEach(attribute => clonedNode.setAttribute(attribute.name, attribute.value))
+    clonedNode.classList.add(CLASS_NAME)
     clonedNode.innerHTML = node.innerHTML
 
     parent.appendChild(clonedNode)
@@ -30,8 +30,8 @@ function addOrUpdateBaseTag(microFrontendName) {
 }
 
 function mountMicroFrontendInPage(microFrontendName, microFrontendDocument) {
-  const microFrontendHeadNodes = microFrontendDocument.head.children
-  const microFrontendBodyNodes = microFrontendDocument.body.children
+  const microFrontendHeadNodes = microFrontendDocument.querySelectorAll("head>*")
+  const microFrontendBodyNodes = microFrontendDocument.querySelectorAll("body>*")
 
   addOrUpdateBaseTag(microFrontendName)
   for (let headNode of microFrontendHeadNodes) {
