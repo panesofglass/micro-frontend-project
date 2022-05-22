@@ -2,9 +2,16 @@ import config from "./config"
 import download from "./download"
 import { mountMicroFrontendInPage, unmountMicroFrontendInPage } from "./mount"
 import { dispatchEvent, eventNames } from "./events"
-import { getToken } from "./auth"
+import { isUserLoggedIn } from "./auth"
 
-function getMicroFrontendNameFromPathname(pathname = window.location.pathname) {
+const {
+    MICRO_FRONTEND_WILL_UNMOUNT,
+    MICRO_FRONTEND_DID_UNMOUNT,
+    MICRO_FRONTEND_WILL_MOUNT,
+    MICRO_FRONTEND_DID_MOUNT,
+} = eventNames;
+
+function getMicroFrontendFromPathname(pathname = window.location.pathname) {
   const [ , microFrontendId ] = pathname.split("/")
   const microFrontend = config.microFrontends.find(microFrontend => microFrontend.pathnameId === microFrontendId)
 
@@ -12,7 +19,7 @@ function getMicroFrontendNameFromPathname(pathname = window.location.pathname) {
     return
   }
 
-  return microFrontend.name
+  return microFrontend
 }
 
 function getMicroFrontendEntryPointUrl(microFrontendName) {
@@ -22,21 +29,33 @@ function getMicroFrontendEntryPointUrl(microFrontendName) {
 const navigationHistory = []
 
 function navigateTo(pathname) {
-  const microFrontendName = getMicroFrontendNameFromPathname(pathname)
+  const microFrontend = getMicroFrontendFromPathname(pathname)
 
-  if (!microFrontendName) {
-    // TODO: load a "default" MFE
-    throw new Error("Could not mount a micro frontend based on the current URL :(")
+  if (!microFrontend) {
+    console.log(`Could not mount a micro frontend based on ${pathname}; redirecting to ${config.defaultPathname}`)
+    return navigateTo(config.defaultPathname)
   }
+
+  if (!isUserLoggedIn && microFrontend.restricted) {
+    console.log(`You're not authorized to access this micro frontend; redirecting to ${config.defaultPathname}`)
+    return navigateTo(config.defaultPathname)
+  }
+
+  if (isUserLoggedIn && !microFrontend.restricted) {
+    console.log(`Redirecting to ${config.defaultPathnameWhenLoggedIn}`)
+    return navigateTo(config.defaultPathnameWhenLoggedIn)
+  }
+
+  const microFrontendName = microFrontend.name
 
   if (navigationHistory.length > 0) {
-    const currentMicroFrontend = getMicroFrontendNameFromPathname(navigationHistory[navigationHistory.length - 1])
-    dispatchEvent(eventNames.MICRO_FRONTEND_WILL_UNMOUNT, { microFrontendName: currentMicroFrontend })
+    const currentMicroFrontend = getMicroFrontendFromPathname(navigationHistory[navigationHistory.length - 1])
+    dispatchEvent(MICRO_FRONTEND_WILL_UNMOUNT, { microFrontendName: currentMicroFrontend.name })
     unmountMicroFrontendInPage()
-    dispatchEvent(eventNames.MICRO_FRONTEND_DID_UNMOUNT, { microFrontendName: currentMicroFrontend })
+    dispatchEvent(MICRO_FRONTEND_DID_UNMOUNT, { microFrontendName: currentMicroFrontend.name })
   }
 
-  dispatchEvent(eventNames.MICRO_FRONTEND_WILL_MOUNT, { microFrontendName })
+  dispatchEvent(MICRO_FRONTEND_WILL_MOUNT, { microFrontendName })
   navigationHistory.push(pathname)
   window.history.pushState({}, "", pathname)
 
@@ -47,23 +66,8 @@ function navigateTo(pathname) {
       mountMicroFrontendInPage(microFrontendName, microFrontendDocument)
     })
     .then(() => {
-      dispatchEvent(eventNames.MICRO_FRONTEND_DID_MOUNT, { microFrontendName })
+      dispatchEvent(MICRO_FRONTEND_DID_MOUNT, { microFrontendName })
     })
 }
 
-function checkAuthentication() {
-  const token = getToken()
-  if (token) {
-    return fetch("https://buildingmfe.maxgallo.io/api/validate", {
-      headers: {
-        "Authorization": `Bearer ${token}`
-      },
-      method: "POST"
-    })
-    .then(res => res.status === 200)
-  } else {
-    return new Promise(resolve => resolve(false))
-  }
-}
-
-export { checkAuthentication, navigateTo }
+export { navigateTo }

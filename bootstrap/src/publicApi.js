@@ -1,6 +1,4 @@
-import { getToken, setToken } from "./auth"
-
-function createPublicApi({ navigateTo, eventNames }) {
+function createPublicApi({ navigateTo, eventNames, getToken, setToken }) {
 	window.bootstrap = {
     auth: {
       getToken,

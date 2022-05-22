@@ -2,13 +2,17 @@ const configuration = {
 	microFrontends: [
     {
       name: "welcome",
-      pathnameId: "hello"
+      pathnameId: "hello",
+      restricted: false
     },
     {
       name: "music",
-      pathnameId: "play"
+      pathnameId: "play",
+      restricted: true
     }
-  ]
+  ],
+  defaultPathname: "/hello",
+  defaultPathnameWhenLoggedIn: "/play"
 }
 
 export default configuration
