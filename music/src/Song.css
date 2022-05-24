@@ -1,27 +1,45 @@
-.song {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 1.0em 0;
+/* Track info */
+.info {
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 10px;
+  margin-top: 10px;
 }
 
-.song>img {
-  height: 100px;
+.info-name {
+  font-family: 'Abril Fatface', cursive;
+  font-size: 30px;
+}
+
+.info-artist {
+  font-size: 20px;
+}
+
+/* Artwork and Player commands*/
+.img-hover {
+  display: none;
+  background-color: rgba(255,255,255,0.5);
+  position: absolute;
+  left: 0;
   width: 100px;
-  margin-right: 1.0em;
+  height: 100px;
+  z-index: 1;
+  color: var(--cinnabar);
 }
 
-.song>.info {
-  display: flex;
-  flex-direction: column;
+.artwork, .img-hover {
+  border-radius: 50px;
 }
 
-.song>.info>h1 {
-  font-size: 1.2em;
-  margin: 0;
+.icon {
+  width: 50px;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  margin-left: -20px;
+  margin-top: -25px;
 }
 
-.song>.info>h2 {
-  font-size: 1.0em;
-  margin: 0;
+.icon.pause {
+  margin-left: -24px;
 }

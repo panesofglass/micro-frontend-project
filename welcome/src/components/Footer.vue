@@ -3,14 +3,14 @@ import { RouterLink } from "vue-router";
 </script>
 
 <template>
-  <nav class="footer polka-dot-bg">
+  <footer class="polka-dot-bg">
     <RouterLink to="/" class="sign-in-link">Home</RouterLink>
     <RouterLink to="/signin" class="sign-in-link">Sign In</RouterLink>
-  </nav>
+  </footer>
 </template>
 
 <style>
-  .footer {
+  footer {
     position: fixed;
     bottom: 0;
     width: 100%;
@@ -19,15 +19,15 @@ import { RouterLink } from "vue-router";
     text-align: center;
   }
 
-  .footer a:not(:first-child) {
+  footer a:not(:first-child) {
     border-left: 5px solid var(--cinnabar);
   }
 
-  .footer a {
+  footer a {
     padding: 0px 15px;
   }
 
-  .footer a:hover {
+  footer a:hover {
     text-decoration: underline;
     text-decoration-color: var(--cinnabar);
   }

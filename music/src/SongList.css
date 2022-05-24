@@ -1,7 +1,46 @@
+.polka-dot-bg {
+  background-image: radial-gradient(#212121 20%, transparent 20%);
+  background-size: 10px 10px;
+}
+
 .song-list {
-  display: flex;
-  flex-direction: column;
-  font-size: calc(10px + 2vmin);
-  color: white;
-  max-width: 80vw;
+  list-style: none;
+  width: 400px;
+  margin-left: 50px;
+  margin-top: 50px;
+  padding: 20px;
+  border: 10px solid var(--mint-cream);
+  color: var(--mint-cream);
+  font-family: sans-serif;
+}
+
+.song-list li {
+  cursor: pointer;
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.song-list li:hover {
+  background-color: rgba(0,0,0,0.4);
+}
+
+.song-list li.selected .info-name,
+.song-list li:hover .info-name {
+  color: var(--cinnabar);
+}
+
+.song-list li:hover .img-hover {
+  display: block;
+}
+
+li.playing .artwork {
+  animation:spin 4s linear infinite;
+}
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+li.playing .play {
+  display: none;
+}
+li:not(.playing) .pause {
+  display: none;
 }

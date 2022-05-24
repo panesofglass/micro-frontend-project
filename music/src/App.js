@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useRef, useState } from "react"
-import './App.css'
 import { getList } from "./api"
 import { deepEqual } from "./utils";
 import SongList from "./SongList"
@@ -45,10 +44,7 @@ function App() {
   }, [selected])
 
   return (
-    <div className="App">
-      <header>
-        <h1>Songs</h1>
-      </header>
+    <>
       <SongList
         songs={list}
         selected={selected}
@@ -56,7 +52,7 @@ function App() {
         setSelected={setSelected}
       />
       <Footer />
-    </div>
+    </>
   )
 }
 

@@ -1,4 +1,4 @@
-.footer {
+footer {
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -7,21 +7,16 @@
   text-align: center;
 }
 
-.footer a:not(:first-child) {
-  border-left: 5px solid var(--cinnabar);
-}
-
-.footer a {
-  padding: 0px 15px;
-}
-
-.footer a:hover {
+.link:hover {
   text-decoration: underline;
   text-decoration-color: var(--cinnabar);
 }
 
-.footer-link {
+.link {
+  cursor: pointer;
+  text-decoration: underline;
   font-family: 'Abril Fatface', cursive;
   color: var(--mint-cream);
   font-size: 25px;
+  padding: 0px 15px;
 }

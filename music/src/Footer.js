@@ -1,10 +1,11 @@
 import {restartApp} from "./bootstrap"
+import "./Footer.css"
 
 const Footer = () => {
   return (
-    <nav className="footer polka-dot-bg">
-      <a href="/signout" class="footer-link" onClick={restartApp}>Sign Out</a>
-    </nav>
+    <footer className="polka-dot-bg">
+      <span className="link" onClick={restartApp}>Sign Out</span>
+    </footer>
   )
 }
 
