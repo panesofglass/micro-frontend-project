@@ -9,6 +9,7 @@ function getToken() {
 function setToken(token) {
   if (!token) {
     window.localStorage.removeItem(TOKEN_NAME)
+    isUserLoggedIn = false
     return
   }
   window.localStorage.setItem(TOKEN_NAME, token)

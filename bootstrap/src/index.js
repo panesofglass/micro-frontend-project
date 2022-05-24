@@ -1,13 +1,14 @@
-import { navigateTo } from "./router"
+import { navigateTo, restartApp } from "./router"
 import { createPublicApi } from "./publicApi"
 import { eventNames } from "./events"
 import { getToken, setToken, validateToken } from "./auth"
 
 createPublicApi({
   navigateTo,
+  restartApp,
   eventNames,
   getToken,
-  setToken
+  setToken,
 })
 
 function loadMicroFrontend() {

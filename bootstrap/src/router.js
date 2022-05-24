@@ -2,7 +2,7 @@ import config from "./config"
 import download from "./download"
 import { mountMicroFrontendInPage, unmountMicroFrontendInPage } from "./mount"
 import { dispatchEvent, eventNames } from "./events"
-import { isUserLoggedIn } from "./auth"
+import { setToken, isUserLoggedIn } from "./auth"
 
 const {
     MICRO_FRONTEND_WILL_UNMOUNT,
@@ -70,4 +70,9 @@ function navigateTo(pathname) {
     })
 }
 
-export { navigateTo }
+function restartApp() {
+  setToken()
+  navigateTo("/hello")
+}
+
+export { navigateTo, restartApp }

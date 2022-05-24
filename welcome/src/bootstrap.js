@@ -17,7 +17,7 @@ function getEventNames() {
 function setToken(token) {
   if (!window.bootstrap) {
     console.log('Bootstrap is not available');
-    return {};
+    return;
   }
   window.bootstrap.auth.setToken(token)
 }
